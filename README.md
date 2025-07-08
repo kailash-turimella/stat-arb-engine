@@ -4,6 +4,7 @@ Statistical Arbitrage Engine built from scratch using Python.
 
 This project demonstrates my interest in quantitative finance and statistical modeling by implementing a pair trading strategy —- from data acquisition and pair selection to signal generation, backtesting, and visualization. It applies mathematical techniques like cointegration, z-score normalization, and time series analysis to financial market data.
 
+
 ---
 
 ## What It Does
@@ -15,6 +16,12 @@ This engine identifies **cointegrated pairs** and simulates a **mean-reversion t
 - Uses **Engle-Granger cointegration tests** to identify statistically viable pairs.
 - Constructs a **spread** between the two assets and generates trading signals based on **Z-score thresholds**.
 - Backtests the strategy with configurable parameters and visualizes the spread with **entry/exit markers**.
+
+---
+
+## 🧪 Testing
+
+This project follows a **Test-Driven Development (TDD)** approach. Each core module (e.g., data fetching, cointegration, signals, backtester) includes its own unit tests to validate behavior and edge cases.
 
 ---
 
