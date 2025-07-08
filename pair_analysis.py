@@ -35,7 +35,7 @@ def get_spread_and_zscore(x, y, beta, window: int = None) :
 
 # --- Test example ---
 def test_strategy_module():
-    print("Running strategy module test...")
+    print("Running pair analysis module test...")
     import fetch_data
     import cointegration
 

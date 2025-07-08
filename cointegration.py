@@ -47,4 +47,4 @@ def test_test_cointegration():
             print(f"{stock_a} and {stock_b} are NOT cointegrated; p-value: {pvalue:.4f}, beta: {beta:.4f}")
 
 
-test_test_cointegration()
+# test_test_cointegration()
