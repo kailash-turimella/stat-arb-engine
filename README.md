@@ -74,7 +74,7 @@ You can customize:
 
 ## 📊 Example Output
 
-![Sample Spread Chart](/sample_spread.png)
+![Sample Spread Chart](samples/sample_spread.png)
 
 - Green ▲ = LONG entry  
 - Red ▼ = SHORT entry  
