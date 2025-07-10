@@ -1,52 +1,47 @@
-import fetch_data
-import cointegration
-import pair_analysis
-import signals
-import backtester
-import plotter
+import os
+import pandas as pd
+from datetime import datetime
 
+from core.fetch_data import fetch_prices
+from core.tradeable_pairs import find_tradeable_pairs
+from core.backtester import backtest_pairs
+
+# === CONFIGURATION ===
+TICKERS = ["AAPL", "MSFT", "GOOG", "AMZN", "META", "SPY", "IVV"]
+START_DATE = "2023-01-01"
+END_DATE = "2023-12-31"
+DATA_DIR = "cache"
+RESULTS_DIR = "results"
+WINDOW_SIZE = 100
+MAX_HOLDING = 20
+
+os.makedirs(DATA_DIR, exist_ok=True)
+os.makedirs(RESULTS_DIR, exist_ok=True)
 
 def main():
-    # sample run
-    x, y = "SPY", "IVV"
-    start_date = "2018-01-01"
-    end_date = "2023-01-01"
-    entry_threshold = 1.0
-    exit_threshold = 0.1
-    window = 60
+    print("=== 1. Fetching Data ===")
+    price_data = fetch_prices(TICKERS, START_DATE, END_DATE)
+    print(f"Fetched data for {len(price_data)} tickers.")
 
-    # 1. Fetch data
-    print("Fetching data...")
-    df = fetch_data.fetch_data(x, y, start_date, end_date)
+    print("\n=== 2. Finding Tradeable Pairs ===")
+    tradeable_pairs = find_tradeable_pairs(price_data)
+    print(f"Tradeable pairs found: {tradeable_pairs}")
 
-    # 2. Test cointegration
-    print("Testing cointegration...")
-    pval, beta = cointegration.test_cointegration(df[x], df[y])
-    print(f"p-value: {pval:.4f}, beta: {beta:.4f}")
-
-    if pval >= 0.05:
-        print(f"{x} and {y} are NOT cointegrated. Exiting.")
+    if not tradeable_pairs:
+        print("No tradeable pairs found. Exiting.")
         return
 
-    # 3. Compute spread and z-score
-    print("Calculating spread and z-score...")
-    spread, zscore = pair_analysis.get_spread_and_zscore(df[x], df[y], beta, window)
-    print("Z-score range:", zscore.min(), zscore.max())
+    print("\n=== 3. Running Backtest ===")
+    results = backtest_pairs(price_data, tradeable_pairs, window_size=WINDOW_SIZE, max_holding=MAX_HOLDING)
 
-    # 4. Generate signals
-    print("Generating trade signals...")
-    signal_series = signals.get_trade_signals(zscore, entry_threshold, exit_threshold)
-
-    # 5. Backtest strategy
-    print("Running backtest...")
-    bt_df = backtester.backtest_signals(spread, signal_series)
-    print(f"Total return: {bt_df['Cumulative PnL'].iloc[-1]:.2f}")
-
-    # 6. Plot results
-    print("Plotting results...")
-    plotter.plot_spread_with_signals(bt_df)
-    plotter.plot_zscore(zscore, entry_threshold, exit_threshold)
-
+    print("\n=== 4. Trade Summary ===")
+    if results.empty:
+        print("No trades were executed.")
+    else:
+        print(results)
+        pnl = results['pnl'].sum()
+        print(f"\nTotal PnL: {pnl:.2f} spreads")
+        results.to_csv(os.path.join(RESULTS_DIR, "trades_summary.csv"), index=False)
 
 if __name__ == "__main__":
     main()
