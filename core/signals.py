@@ -38,19 +38,36 @@ def generate_signal(x: pd.Series, y: pd.Series, z_entry: float = 1.0, z_exit: fl
     """
     hedge_ratio = compute_hedge_ratio(x, y)
 
-    # Build features and labels (train on historical data)
-    X, y_labels = build_training_data(x, y, hedge_ratio)
-    model = train_logistic_regression_model(X, y_labels)
+    # Adaptive window expansion for training data
+    for window_multiplier in [1, 2]:
+        try:
+            X, y_labels = build_training_data(x[-10 * window_multiplier:], y[-10 * window_multiplier:], hedge_ratio)
+            if y_labels.nunique() >= 2:
+                break
+        except Exception:
+            continue
+    else:
+        # Fallback to basic logic if model training is not possible
+        print("failed to train model, using fallback logic")
+        spread = x - hedge_ratio * y
+        zscore = (spread - spread.rolling(10).mean()) / spread.rolling(10).std()
+        current_z = zscore.iloc[-1]
 
-    # Predict on the latest feature vector
+        if abs(current_z) > z_entry:
+            direction = 'long' if current_z < 0 else 'short'
+            return {'signal': direction, 'confidence': 0.5, 'hedge_ratio': hedge_ratio}
+        else:
+            return {'signal': 'none', 'confidence': 0.0, 'hedge_ratio': hedge_ratio}
+
+    # Train model and make prediction
+    model = train_logistic_regression_model(X, y_labels)
+    print("MODEL TRAINED")
     pred_label, confidence = predict(model, X)
 
-    # Get current z-score to decide direction
     spread = x - hedge_ratio * y
     zscore = (spread - spread.rolling(10).mean()) / spread.rolling(10).std()
     current_z = zscore.iloc[-1]
 
-    # Determine signal type based on prediction and z-score
     if abs(current_z) < z_entry or confidence < confidence_threshold or pred_label == 0:
         return {'signal': 'none', 'confidence': confidence, 'hedge_ratio': hedge_ratio}
 
