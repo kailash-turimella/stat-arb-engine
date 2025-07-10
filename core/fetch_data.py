@@ -41,13 +41,12 @@ def fetch_prices(tickers, start_date, end_date, use_cache=True, cache_dir="cache
 
 
 
-# Optional: Test block
-if __name__ == "__main__":
-    test_tickers = ['AAPL', 'MSFT']
-    data = fetch_prices(test_tickers, '2023-01-01', '2023-03-01')
-    for ticker in test_tickers:
-        if ticker in data:
-            print(f"\n{ticker} prices:")
-            print(data[ticker].head())
-        else:
-            print(f"{ticker} data not found.")
+# if __name__ == "__main__":
+#     test_tickers = ['AAPL', 'MSFT']
+#     data = fetch_prices(test_tickers, '2023-01-01', '2023-03-01')
+#     for ticker in test_tickers:
+#         if ticker in data:
+#             print(f"\n{ticker} prices:")
+#             print(data[ticker].head())
+#         else:
+#             print(f"{ticker} data not found.")

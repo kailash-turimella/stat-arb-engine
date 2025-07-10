@@ -25,7 +25,7 @@ def find_cointegrated_pairs(price_dict, pval_threshold=0.05):
                 continue  # skip if not enough data
 
             score, pvalue, _ = coint(df.iloc[:, 0], df.iloc[:, 1])
-            print(f"p-value: {pvalue} for the stocks {t1}  {t2}")
+            # print(f"p-value: {pvalue} for the stocks {t1}  {t2}")
             if pvalue < pval_threshold:
                 selected_pairs.append((t1, t2))
 
@@ -93,7 +93,7 @@ def find_tradeable_pairs(price_dict, pval_threshold=0.05, min_corr=0.85, min_spr
         list of filtered cointegrated pairs
     """
     raw_pairs = find_cointegrated_pairs(price_dict, pval_threshold)
-    print("Cointegrated pairs:", raw_pairs)
+    # print("Cointegrated pairs:", raw_pairs)
     tradeable_pairs = filter_tradeable_pairs(price_dict, raw_pairs, min_corr, min_spread_std)
     return tradeable_pairs
 
