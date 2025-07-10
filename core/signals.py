@@ -48,7 +48,7 @@ def generate_signal(x: pd.Series, y: pd.Series, z_entry: float = 1.0, z_exit: fl
             continue
     else:
         # Fallback to basic logic if model training is not possible
-        print("failed to train model, using fallback logic")
+        # print("failed to train model, using fallback logic")
         spread = x - hedge_ratio * y
         zscore = (spread - spread.rolling(10).mean()) / spread.rolling(10).std()
         current_z = zscore.iloc[-1]
@@ -61,7 +61,7 @@ def generate_signal(x: pd.Series, y: pd.Series, z_entry: float = 1.0, z_exit: fl
 
     # Train model and make prediction
     model = train_logistic_regression_model(X, y_labels)
-    print("MODEL TRAINED")
+    # print("MODEL TRAINED")
     pred_label, confidence = predict(model, X)
 
     spread = x - hedge_ratio * y
