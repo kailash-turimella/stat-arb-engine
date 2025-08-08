@@ -72,6 +72,29 @@ You can customize:
 
 ---
 
+## 🌐 Streamlit Dashboard
+
+Launch the interactive dashboard:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Customize in the sidebar:
+- Tickers (X & Y)
+- Start/End Date
+- Entry/Exit Z-score thresholds
+- Rolling window size
+- Notional value per trade
+
+The dashboard outputs:
+- Cointegration test results
+- Spread & z-score plots
+- Trade signals and timing
+- Realistic cumulative PnL in terms of dollars
+
+---
+
 ## 📊 Example Output
 
 ![Sample Spread Chart](samples/sample_spread.png)
