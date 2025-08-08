@@ -38,6 +38,7 @@ This engine identifies **cointegrated pairs** and simulates a **mean-reversion t
 | `backtester.py` | Executes trades, tracks P&L, logs strategy performance |
 | `pair_analysis.py` | Filters and scores pairs based on correlation and stationarity |
 | `plotter.py` | Visualizes spread and signals on a matplotlib chart |
+| `streamlit_app.py` | Interactive Streamlit dashboard for parameter tuning and visualization |
 
 ---
 
@@ -54,6 +55,7 @@ pip install -r requirements.txt
 - matplotlib
 - statsmodels
 - yfinance
+- streamlit
 
 ---
 
